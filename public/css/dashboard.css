@@ -1,0 +1,110 @@
+/* ===========================
+   HEADER DU DASHBOARD
+=========================== */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
+}
+
+.dashboard-header h2 {
+    font-size: 26px;
+    font-weight: bold;
+    color: #1f2937;
+}
+
+.search-input {
+    padding: 10px 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    width: 260px;
+    transition: 0.3s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #4f46e5;
+}
+
+/* ===========================
+   CARDS STATISTIQUES
+=========================== */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    transition: 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}
+
+.card h4 {
+    font-size: 17px;
+    color: #4b5563;
+}
+
+.card .value {
+    margin-top: 12px;
+    font-size: 26px;
+    font-weight: bold;
+    color: #111827;
+}
+
+/* ===========================
+   SECTIONS
+=========================== */
+.section {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    margin-bottom: 35px;
+}
+
+.section h3 {
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+/* ===========================
+   TABLE MODERNE
+=========================== */
+.modern-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.modern-table thead {
+    background: #1f2937;
+    color: white;
+}
+
+.modern-table th, .modern-table td {
+    padding: 14px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+}
+
+.modern-table tbody tr:hover {
+    background: #f3f4f6;
+}
+
+/* ===========================
+   GRAPHIQUE
+=========================== */
+canvas {
+    width: 100% !important;
+    margin-top: 20px;
+}

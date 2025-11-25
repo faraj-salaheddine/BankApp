@@ -1,0 +1,140 @@
+/* ============================
+   THEME BANCAIRE PREMIUM PRO
+   Bleu nuit — Violet — Flat Glass
+=============================== */
+
+body {
+    background: #eef1f8;
+    font-family: "Poppins", sans-serif;
+}
+
+/* --- Wrapper --- */
+.container {
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 20px;
+    margin-top: 40px;
+    width: 92%;
+    max-width: 1200px;
+    box-shadow: 0px 15px 40px rgba(10, 20, 60, 0.10);
+}
+
+/* --- Titre --- */
+.page-title, h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1b1d36;
+    margin-bottom: 25px;
+}
+
+/* --- Bouton principal --- */
+.btn-main {
+    background: linear-gradient(135deg, #4A00E0, #8E2DE2);
+    color: #fff !important;
+    padding: 10px 20px;
+    font-weight: 600;
+    border-radius: 12px;
+    display: inline-block;
+    transition: 0.2s;
+}
+
+.btn-main:hover {
+    opacity: .9;
+}
+
+/* --- Table Custom (premium) --- */
+.table-custom {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    border-radius: 14px;
+    overflow: hidden;
+    font-size: 15px;
+}
+
+.table-custom thead tr {
+    background: #1b1d36;
+    color: #ffffff;
+}
+
+.table-custom th, .table-custom td {
+    padding: 14px 18px;
+    text-align: left;
+}
+
+.table-custom tbody tr {
+    background: #ffffff;
+    transition: 0.15s ease-in-out;
+}
+
+.table-custom tbody tr:nth-child(even) {
+    background: #f4f6fc;
+}
+
+.table-custom tbody tr:hover {
+    background: #e8ecff;
+}
+
+/* --- Actions --- */
+.actions {
+    display: flex;
+    gap: 12px;
+}
+
+/* Modifier */
+.btn-edit {
+    background: #4A00E0;
+    color: #fff !important;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.btn-edit:hover {
+    background: #3800b6;
+}
+
+/* Supprimer */
+.btn-delete {
+    background: #e3122c;
+    color: white !important;
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.btn-delete:hover {
+    background: #bb0f22;
+}
+
+/* --- Formulaires (create + edit) --- */
+form label {
+    font-weight: 600;
+    color: #1b1d36;
+}
+
+form input, form select {
+    background: #f9f9ff;
+    border: 1px solid #d8d8e7;
+    border-radius: 12px;
+    padding: 10px 13px;
+    transition: 0.2s;
+}
+
+form input:focus, form select:focus {
+    border-color: #4A00E0;
+    box-shadow: 0 0 5px rgba(74, 0, 224, 0.3);
+}
+
+.btn-secondary {
+    background: #6d6d82;
+    border: none;
+    padding: 9px 20px;
+    color: #fff !important;
+    border-radius: 10px;
+    font-weight: 600;
+}
