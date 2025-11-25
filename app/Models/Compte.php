@@ -10,10 +10,13 @@ class Compte extends Model
     use HasFactory;
 
     protected $fillable = [
-        'rib',
-        'solde',
-        'client_id'
-    ];
+    'rib',
+    'solde',
+    'client_id',
+    'type_compte',
+    'statut'
+];
+
 
     // Relation : un compte appartient à un seul client
     public function client()

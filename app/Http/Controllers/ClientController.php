@@ -7,20 +7,20 @@ use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
-    // Liste des clients
+    // Afficher la liste des clients
     public function index()
     {
         $clients = Client::all();
         return view('clients.index', compact('clients'));
     }
 
-    // Formulaire de création
+    // Formulaire d'ajout d'un client
     public function create()
     {
         return view('clients.create');
     }
 
-    // Enregistrement d’un client
+    // Enregistrer un nouveau client
     public function store(Request $request)
     {
         $request->validate([
@@ -34,22 +34,23 @@ class ClientController extends Controller
         Client::create([
             'nom' => $request->nom,
             'prenom' => $request->prenom,
-            'email' => $request->email,
             'cin' => $request->cin,
             'adresse' => $request->adresse,
+            'email' => $request->email,
         ]);
 
-        return redirect()->route('clients.index')->with('success', 'Client ajouté avec succès !');
+        return redirect()->route('clients.index')
+            ->with('success', 'Client ajouté avec succès !');
     }
 
-    // Formulaire de modification
+    // Formulaire d'édition
     public function edit($id)
     {
         $client = Client::findOrFail($id);
         return view('clients.edit', compact('client'));
     }
 
-    // Mise à jour d’un client
+    // Modifier un client
     public function update(Request $request, $id)
     {
         $client = Client::findOrFail($id);
@@ -65,18 +66,21 @@ class ClientController extends Controller
         $client->update([
             'nom' => $request->nom,
             'prenom' => $request->prenom,
-            'email' => $request->email,
             'cin' => $request->cin,
             'adresse' => $request->adresse,
+            'email' => $request->email,
         ]);
 
-        return redirect()->route('clients.index')->with('success', 'Client modifié avec succès !');
+        return redirect()->route('clients.index')
+            ->with('success', 'Client modifié avec succès !');
     }
 
-    // Suppression
+    // Supprimer un client
     public function destroy($id)
     {
         Client::destroy($id);
-        return redirect()->route('clients.index')->with('success', 'Client supprimé !');
+
+        return redirect()->route('clients.index')
+            ->with('success', 'Client supprimé !');
     }
 }

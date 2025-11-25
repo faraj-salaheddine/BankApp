@@ -5,41 +5,102 @@
 @endsection
 
 @section('content')
-<div class="container">
-
-    <h1>Modifier le compte</h1>
-
-    <form action="{{ route('comptes.update', $compte->id) }}" method="POST">
-        @csrf
-        @method('PUT')
-
-        <div class="mb-3">
-            <label>RIB :</label>
-            <input type="text" name="rib" class="form-control"
-                   value="{{ $compte->rib }}" required>
+<div class="form-wrapper">
+    <div class="form-container">
+        <div class="form-header">
+            <a href="{{ route('comptes.index') }}" class="back-link">
+                <i data-lucide="arrow-left"></i>
+                Retour
+            </a>
+            <h1 class="form-title">
+                <i data-lucide="edit" class="icon-title"></i>
+                Modifier le compte #{{ $compte->id }}
+            </h1>
+            <p class="form-description">
+                <i data-lucide="fingerprint" class="icon-inline"></i>
+                RIB: {{ $compte->rib }}
+            </p>
         </div>
 
-        <div class="mb-3">
-            <label>Solde :</label>
-            <input type="number" name="solde" class="form-control"
-                   value="{{ $compte->solde }}" required>
-        </div>
+        <form action="{{ route('comptes.update', $compte->id) }}" method="POST" class="modern-form">
+            @csrf
+            @method('PUT')
 
-        <div class="mb-3">
-            <label>Client :</label>
-            <select name="client_id" class="form-control" required>
-                @foreach($clients as $client)
-                    <option value="{{ $client->id }}"
-                        {{ $client->id == $compte->client_id ? 'selected' : '' }}>
-                        {{ $client->nom }} {{ $client->prenom }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+            <div class="form-group">
+                <label for="rib" class="form-label">
+                    <span class="label-text">
+                        <i data-lucide="key" class="icon-xs"></i>
+                        RIB
+                    </span>
+                    <span class="label-required">*</span>
+                </label>
+                <div class="input-wrapper">
+                    <i data-lucide="fingerprint" class="input-icon"></i>
+                    <input 
+                        type="text" 
+                        name="rib" 
+                        id="rib"
+                        class="form-input" 
+                        value="{{ $compte->rib }}"
+                        required
+                    >
+                </div>
+            </div>
 
-        <button class="btn btn-primary">Mettre à jour</button>
-        <a href="{{ route('comptes.index') }}" class="btn btn-secondary">Annuler</a>
-    </form>
+            <div class="form-group">
+                <label for="solde" class="form-label">
+                    <span class="label-text">
+                        <i data-lucide="wallet" class="icon-xs"></i>
+                        Solde
+                    </span>
+                    <span class="label-required">*</span>
+                </label>
+                <div class="input-wrapper">
+                    <i data-lucide="dollar-sign" class="input-icon"></i>
+                    <input 
+                        type="number" 
+                        name="solde" 
+                        id="solde"
+                        class="form-input" 
+                        value="{{ $compte->solde }}"
+                        step="0.01"
+                        required
+                    >
+                    <span class="input-suffix">DH</span>
+                </div>
+            </div>
 
+            <div class="form-group">
+                <label for="client_id" class="form-label">
+                    <span class="label-text">
+                        <i data-lucide="user" class="icon-xs"></i>
+                        Titulaire
+                    </span>
+                    <span class="label-required">*</span>
+                </label>
+                <div class="input-wrapper">
+                    <i data-lucide="users" class="input-icon"></i>
+                    <select name="client_id" id="client_id" class="form-select" required>
+                        @foreach($clients as $client)
+                            <option value="{{ $client->id }}" {{ $client->id == $compte->client_id ? 'selected' : '' }}>
+                                {{ $client->nom }} {{ $client->prenom }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                    <i data-lucide="save"></i>
+                    Mettre à jour
+                </button>
+                <a href="{{ route('comptes.index') }}" class="btn-cancel">
+                    <i data-lucide="x-circle"></i>
+                    Annuler
+                </a>
+            </div>
+        </form>
+    </div>
 </div>
 @endsection

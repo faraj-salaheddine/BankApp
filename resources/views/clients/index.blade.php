@@ -5,42 +5,68 @@
 @endsection
 
 @section('content')
-<h2 class="page-title">Liste des clients</h2>
 
-<a href="{{ route('clients.create') }}" class="btn-main">Ajouter un client</a>
+<div class="container mt-4">
 
-<div class="card-container">
-    <table class="table-custom">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th>Email</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <h2 class="page-title">Clients</h2>
 
-        <tbody>
-            @foreach ($clients as $client)
+        <a href="{{ route('clients.create') }}" class="btn-add">+ Ajouter un client</a>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input type="text" placeholder="Rechercher un client...">
+    </div>
+
+    <!-- TABLE -->
+    <div class="card-container mt-3">
+        <table class="table-custom">
+            <thead>
                 <tr>
-                    <td>{{ $client->id }}</td>
-                    <td>{{ $client->nom }}</td>
-                    <td>{{ $client->prenom }}</td>
-                    <td>{{ $client->email }}</td>
-                    <td class="actions">
-                        <a href="{{ route('clients.edit', $client->id) }}" class="btn-edit">Modifier</a>
-
-                        <form method="POST" action="{{ route('clients.destroy', $client->id) }}" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn-delete" onclick="return confirm('Supprimer ce client ?')">Supprimer</button>
-                        </form>
-                    </td>
+                    <th>NOM</th>
+                    <th>PRÉNOM</th>
+                    <th>CIN</th>
+                    <th>EMAIL</th>
+                    <th>ADRESSE</th>
+                    <th>ACTIONS</th>
                 </tr>
-            @endforeach
-        </tbody>
+            </thead>
 
-    </table>
+            <tbody>
+                @forelse ($clients as $client)
+                    <tr>
+                        <td>{{ $client->nom }}</td>
+                        <td>{{ $client->prenom }}</td>
+                        <td>{{ $client->cin }}</td>
+                        <td>{{ $client->email }}</td>
+                        <td>{{ $client->adresse }}</td>
+
+                        <td>
+                            <div class="actions">
+                                <a class="btn-edit" href="{{ route('clients.edit', $client->id) }}">Modifier</a>
+
+                                <form action="{{ route('clients.destroy', $client->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn-delete">Supprimer</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" style="text-align:center; padding:20px;">
+                            Aucun client trouvé.
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
 </div>
+
 @endsection

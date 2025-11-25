@@ -6,7 +6,21 @@
         <h1>Mon Profil Administrateur</h1>
         <p>Gérez vos informations personnelles et la sécurité de votre compte.</p>
     </div>
+@if (session('success'))
+    <div class="alert alert-success" style="background: #d1fae5; color: #065f46; padding: 1rem; margin-bottom: 1rem; border-radius: 8px;">
+        {{ session('success') }}
+    </div>
+@endif
 
+@if ($errors->any())
+    <div class="alert alert-danger" style="background: #fee2e2; color: #991b1b; padding: 1rem; margin-bottom: 1rem; border-radius: 8px;">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
     <div class="profile-grid">
         
         {{-- COLONNE GAUCHE : Carte de l'Admin --}}

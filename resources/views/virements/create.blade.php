@@ -1,34 +1,31 @@
 @extends('layout.app')
 
 @section('content')
-<div class="transfer-container">
-    <div class="transfer-card">
+<div class="form-wrapper">
+    <div class="form-container">
         {{-- En-tête --}}
-        <div class="card-header">
-            <div class="header-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="7 10 12 15 17 10"></polyline>
-                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-            </div>
-            <h2 class="card-title">Effectuer un Virement</h2>
-            <p class="card-subtitle">Transférez des fonds entre vos comptes en toute sécurité</p>
+        <div class="form-header">
+            <a href="{{ url()->previous() }}" class="back-link">
+                <i data-lucide="arrow-left" class="icon-xs"></i>
+                Retour
+            </a>
+            
+            <h1 class="form-title">
+                <i data-lucide="arrow-right-left" class="icon-title"></i>
+                Effectuer un Virement
+            </h1>
+            <p class="form-description">
+                Transférez des fonds entre vos comptes en toute sécurité
+            </p>
         </div>
 
         {{-- Messages d'erreur --}}
         @if ($errors->any())
-        <div class="alert alert-error">
-            <div class="alert-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                </svg>
-            </div>
+        <div class="alert alert-danger">
+            <i data-lucide="alert-circle" class="alert-icon"></i>
             <div class="alert-content">
-                <h4>Erreur de validation</h4>
-                <ul>
+                <strong>Erreur de validation</strong>
+                <ul class="error-list">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
@@ -38,109 +35,153 @@
         @endif
 
         {{-- Formulaire --}}
-        <form method="POST" action="{{ route('virements.store') }}" class="transfer-form">
+        <form method="POST" action="{{ route('virements.store') }}" class="modern-form horizontal-form">
             @csrf
 
-            {{-- Compte Source --}}
-            <div class="form-group">
-                <label for="compte_source" class="form-label">
-                    <svg class="label-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-                        <line x1="2" y1="10" x2="22" y2="10"></line>
-                    </svg>
-                    Compte Source
-                </label>
-                <div class="select-wrapper">
-                    <select name="compte_source" id="compte_source" class="form-select" required>
-                        <option value="" disabled selected>Sélectionnez le compte à débiter</option>
-                        @foreach($comptes as $c)
-                            <option value="{{ $c->id }}" {{ old('compte_source') == $c->id ? 'selected' : '' }}>
-                                {{ $c->rib }} — {{ $c->client->nom }} 
-                                ({{ number_format($c->solde ?? 0, 2, ',', ' ') }} €)
-                            </option>
-                        @endforeach
-                    </select>
-                    <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
+            {{-- Section des Comptes (Horizontal) --}}
+            <div class="accounts-section">
+                {{-- Compte Source --}}
+                <div class="form-group flex-item">
+                    <label for="compte_source" class="form-label">
+                        <span class="label-text">
+                            <i data-lucide="wallet" class="icon-xs"></i>
+                            Compte Source
+                        </span>
+                        <span class="label-required">*</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <i data-lucide="credit-card" class="input-icon"></i>
+                        <select name="compte_source" id="compte_source" class="form-select" required>
+                            <option value="" disabled selected>Sélectionnez le compte à débiter</option>
+                            @foreach($comptes as $c)
+                                <option value="{{ $c->id }}" {{ old('compte_source') == $c->id ? 'selected' : '' }}>
+                                    {{ $c->rib }} — {{ $c->client->nom }} 
+                                    ({{ number_format($c->solde ?? 0, 2, ',', ' ') }} DH)
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                {{-- Flèche de transfert (Horizontal) --}}
+                <div class="transfer-indicator horizontal">
+                    <div class="transfer-icon">
+                        <i data-lucide="arrow-right" class="icon-transfer"></i>
+                    </div>
+                </div>
+
+                {{-- Compte Destination --}}
+                <div class="form-group flex-item">
+                    <label for="compte_destination" class="form-label">
+                        <span class="label-text">
+                            <i data-lucide="landmark" class="icon-xs"></i>
+                            Compte Destination
+                        </span>
+                        <span class="label-required">*</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <i data-lucide="credit-card" class="input-icon"></i>
+                        <select name="compte_destination" id="compte_destination" class="form-select" required>
+                            <option value="" disabled selected>Sélectionnez le compte à créditer</option>
+                            @foreach($comptes as $c)
+                                <option value="{{ $c->id }}" {{ old('compte_destination') == $c->id ? 'selected' : '' }}>
+                                    {{ $c->rib }} — {{ $c->client->nom }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
             </div>
 
-            {{-- Flèche de transfert --}}
-            <div class="transfer-arrow">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <polyline points="19 12 12 19 5 12"></polyline>
-                </svg>
-            </div>
+            {{-- Section Montant et Motif (Horizontal) --}}
+            <div class="details-section">
+                {{-- Montant --}}
+                <div class="form-group flex-item">
+                    <label for="montant" class="form-label">
+                        <span class="label-text">
+                            <i data-lucide="banknote" class="icon-xs"></i>
+                            Montant à Transférer
+                        </span>
+                        <span class="label-required">*</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <i data-lucide="dollar-sign" class="input-icon"></i>
+                        <input 
+                            type="number" 
+                            step="0.01" 
+                            name="montant" 
+                            id="montant" 
+                            class="form-input amount-input" 
+                            placeholder="0.00"
+                            value="{{ old('montant') }}"
+                            min="0.01"
+                            required
+                        >
+                        <span class="input-suffix">DH</span>
+                    </div>
+                    <small class="form-hint">
+                        <i data-lucide="alert-triangle" class="icon-xs"></i>
+                        Montant minimum : 0,01 DH
+                    </small>
+                </div>
 
-            {{-- Compte Destination --}}
-            <div class="form-group">
-                <label for="compte_destination" class="form-label">
-                    <svg class="label-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-                        <line x1="2" y1="10" x2="22" y2="10"></line>
-                    </svg>
-                    Compte Destination
-                </label>
-                <div class="select-wrapper">
-                    <select name="compte_destination" id="compte_destination" class="form-select" required>
-                        <option value="" disabled selected>Sélectionnez le compte à créditer</option>
-                        @foreach($comptes as $c)
-                            <option value="{{ $c->id }}" {{ old('compte_destination') == $c->id ? 'selected' : '' }}>
-                                {{ $c->rib }} — {{ $c->client->nom }}
-                            </option>
-                        @endforeach
-                    </select>
-                    <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
+                {{-- Motif du Virement --}}
+                <div class="form-group flex-item">
+                    <label for="motif" class="form-label">
+                        <span class="label-text">
+                            <i data-lucide="file-text" class="icon-xs"></i>
+                            Motif du Virement
+                        </span>
+                        <span class="label-optional">(Optionnel)</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <i data-lucide="message-square" class="input-icon"></i>
+                        <textarea 
+                            name="motif" 
+                            id="motif" 
+                            class="form-textarea" 
+                            placeholder="Ex: Remboursement, Loyer, Cadeau..."
+                            rows="3"
+                        >{{ old('motif') }}</textarea>
+                    </div>
+                    <small class="form-hint">
+                        <i data-lucide="info" class="icon-xs"></i>
+                        Ajoutez une description pour faciliter le suivi
+                    </small>
                 </div>
             </div>
 
-            {{-- Montant --}}
-            <div class="form-group">
-                <label for="montant" class="form-label">
-                    <svg class="label-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="12" y1="1" x2="12" y2="23"></line>
-                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                    </svg>
-                    Montant à Transférer
-                </label>
-                <div class="input-wrapper">
-                    <input 
-                        type="number" 
-                        step="0.01" 
-                        name="montant" 
-                        id="montant" 
-                        class="form-input" 
-                        placeholder="0.00"
-                        value="{{ old('montant') }}"
-                        min="0.01"
-                        required
-                    >
-                    <span class="input-currency">€</span>
+            {{-- Résumé visuel --}}
+            <div class="transfer-summary">
+                <div class="summary-icon">
+                    <i data-lucide="circle-dollar-sign"></i>
                 </div>
-                <small class="form-help">Montant minimum : 0,01 €</small>
+                <div class="summary-details">
+                    <div class="summary-row">
+                        <span class="summary-label">Montant du virement</span>
+                        <span class="summary-value" id="display-amount">0.00 DH</span>
+                    </div>
+                    <div class="summary-divider"></div>
+                    <div class="summary-row motif-row">
+                        <span class="summary-label">
+                            <i data-lucide="message-circle" class="icon-xs"></i>
+                            Motif
+                        </span>
+                        <span class="summary-motif" id="display-motif">Aucun motif</span>
+                    </div>
+                </div>
             </div>
 
             {{-- Boutons d'action --}}
             <div class="form-actions">
-                {{-- Utilisation d'un lien simple au lieu de history.back() pour éviter le JS inline --}}
-                <a href="{{ url()->previous() }}" class="btn btn-secondary">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="19" y1="12" x2="5" y2="12"></line>
-                        <polyline points="12 19 5 12 12 5"></polyline>
-                    </svg>
+                <a href="{{ url()->previous() }}" class="btn-cancel">
+                    <i data-lucide="x"></i>
                     Annuler
                 </a>
                 
-                {{-- Bouton Submit direct --}}
-                <button type="submit" class="btn btn-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    Valider le Virement
+                <button type="submit" class="btn-submit">
+                    <i data-lucide="send"></i>
+                    Confirmer le Virement
                 </button>
             </div>
         </form>
@@ -148,62 +189,66 @@
 </div>
 
 <style>
-/* ===================================
-   Variables CSS
-   =================================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 :root {
-    --primary-color: #2563eb;
-    --primary-hover: #1d4ed8;
-    --primary-light: #dbeafe;
-    --secondary-color: #64748b;
-    --secondary-hover: #475569;
-    --success-color: #10b981;
-    --success-light: #d1fae5;
-    --warning-color: #f59e0b;
-    --warning-light: #fef3c7;
-    --error-color: #ef4444;
-    --error-bg: #fee2e2;
-    --border-color: #e2e8f0;
-    --text-primary: #0f172a;
-    --text-secondary: #64748b;
-    --bg-card: #ffffff;
-    --bg-body: #f8fafc;
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    --radius-sm: 6px;
-    --radius-md: 8px;
-    --radius-lg: 12px;
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --primary: #0066FF;
+    --primary-dark: #0052CC;
+    --primary-light: #3d8bff;
+    --secondary: #00C2FF;
+    --success: #00BA88;
+    --danger: #FF3B30;
+    --warning: #FF9500;
+    --dark: #0A1929;
+    --gray-50: #F8FAFC;
+    --gray-100: #F1F5F9;
+    --gray-200: #E2E8F0;
+    --gray-300: #CBD5E1;
+    --gray-400: #94A3B8;
+    --gray-700: #334155;
+    --gray-900: #0F172A;
+    
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 10px 24px -4px rgba(0, 0, 0, 0.12);
+    --shadow-xl: 0 24px 48px -12px rgba(0, 0, 0, 0.18);
+    
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ===================================
-   Conteneur Principal
-   =================================== */
-.transfer-container {
+/* ============= BASE ============= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-900);
+    line-height: 1.6;
     min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 2rem 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 20px 0;
 }
 
-.transfer-card {
-    background: var(--bg-card);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-xl);
-    max-width: 600px;
-    width: 100%;
-    overflow: hidden;
-    animation: slideUp 0.5s ease-out;
+/* ============= FORM WRAPPER ============= */
+.form-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes slideUp {
+@keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(40px);
     }
     to {
         opacity: 1;
@@ -211,337 +256,560 @@
     }
 }
 
-/* ===================================
-   En-tête de la Carte
-   =================================== */
-.card-header {
-    background: linear-gradient(135deg, var(--primary-color) 0%, #1e40af 100%);
-    padding: 2rem;
-    text-align: center;
-    color: white;
+.form-container {
+    background: white;
+    border-radius: var(--radius-xl);
+    padding: 44px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--gray-200);
 }
 
-.header-icon {
+/* ============= FORM HEADER ============= */
+.form-header {
+    margin-bottom: 36px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--gray-100);
+}
+
+.back-link {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    width: 64px;
-    height: 64px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    margin-bottom: 1rem;
-    backdrop-filter: blur(10px);
+    gap: 6px;
+    color: var(--gray-700);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    transition: var(--transition);
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
 }
 
-.card-title {
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin: 0 0 0.5rem 0;
-    letter-spacing: -0.025em;
+.back-link:hover {
+    color: var(--primary);
+    background: var(--gray-50);
+    gap: 8px;
 }
 
-.card-subtitle {
-    font-size: 0.95rem;
-    opacity: 0.9;
-    margin: 0;
-    font-weight: 400;
-}
-
-/* ===================================
-   Alertes
-   =================================== */
-.alert {
-    margin: 1.5rem;
-    padding: 1rem 1.25rem;
-    border-radius: var(--radius-md);
+.form-title {
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--dark);
     display: flex;
-    gap: 1rem;
-    animation: shake 0.5s;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
 }
 
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
+.form-description {
+    color: var(--gray-700);
+    font-size: 15px;
+    margin: 0;
+    line-height: 1.5;
 }
 
-.alert-error {
-    background: var(--error-bg);
-    border-left: 4px solid var(--error-color);
+/* ============= ALERTS ============= */
+.alert {
+    padding: 18px 20px;
+    border-radius: var(--radius-md);
+    margin-bottom: 28px;
+    display: flex;
+    gap: 14px;
+    animation: slideDown 0.4s ease;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    color: #7f1d1d;
+    border-left: 4px solid var(--danger);
+    box-shadow: var(--shadow-sm);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .alert-icon {
     flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    color: var(--danger);
 }
 
-.alert-error .alert-icon {
-    color: var(--error-color);
+.alert-content strong {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 700;
+    font-size: 15px;
 }
 
-.alert-content {
-    flex: 1;
-}
-
-.alert-content h4 {
-    margin: 0 0 0.5rem 0;
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--error-color);
-}
-
-.alert-content ul {
+.error-list {
+    list-style: none;
+    padding: 0;
     margin: 0;
-    padding-left: 1.25rem;
-    color: #991b1b;
 }
 
-.alert-content li {
-    margin-bottom: 0.25rem;
-    font-size: 0.9rem;
+.error-list li {
+    padding-left: 24px;
+    position: relative;
+    margin-bottom: 6px;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
-/* ===================================
-   Formulaire
-   =================================== */
-.transfer-form {
-    padding: 2rem;
+.error-list li::before {
+    content: "→";
+    position: absolute;
+    left: 6px;
+    font-weight: 700;
 }
 
-.form-group {
-    margin-bottom: 1.75rem;
+/* ============= HORIZONTAL FORM LAYOUT ============= */
+.horizontal-form .accounts-section,
+.horizontal-form .details-section {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 24px;
+    align-items: start;
+    margin-bottom: 32px;
+}
+
+.horizontal-form .details-section {
+    grid-template-columns: 1fr 1fr;
+}
+
+.flex-item {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ============= FORM GROUPS ============= */
+.modern-form .form-group {
+    margin-bottom: 0;
 }
 
 .form-label {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.95rem;
+    margin-bottom: 10px;
     font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
+    color: var(--dark);
+    font-size: 14px;
 }
 
-.label-icon {
-    color: var(--primary-color);
+.label-text {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-/* ===================================
-   Champs Select
-   =================================== */
-.select-wrapper {
-    position: relative;
+.label-required {
+    color: var(--danger);
+    font-weight: 700;
 }
 
-.form-select {
-    width: 100%;
-    padding: 0.875rem 2.5rem 0.875rem 1rem;
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-md);
-    font-size: 0.95rem;
-    color: var(--text-primary);
-    background: white;
-    transition: var(--transition);
-    appearance: none;
-    cursor: pointer;
+.label-optional {
+    color: var(--gray-400);
+    font-weight: 500;
+    font-size: 13px;
 }
 
-.form-select:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px var(--primary-light);
-}
-
-.form-select:hover {
-    border-color: var(--primary-color);
-}
-
-.select-arrow {
-    position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-    color: var(--text-secondary);
-    transition: var(--transition);
-}
-
-.form-select:focus + .select-arrow {
-    color: var(--primary-color);
-}
-
-/* ===================================
-   Champ Input
-   =================================== */
+/* ============= INPUT WRAPPER ============= */
 .input-wrapper {
     position: relative;
+    display: flex;
+    align-items: center;
 }
 
-.form-input {
-    width: 100%;
-    padding: 0.875rem 3rem 0.875rem 1rem;
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-md);
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    background: white;
+.input-icon {
+    position: absolute;
+    left: 16px;
+    width: 20px;
+    height: 20px;
+    color: var(--gray-400);
+    pointer-events: none;
+    z-index: 1;
     transition: var(--transition);
 }
 
-.form-input:focus {
+.form-input, .form-select, .form-textarea {
+    width: 100%;
+    padding: 14px 16px 14px 48px;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    transition: var(--transition);
+    background: var(--gray-50);
+    color: var(--dark);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.6;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
     outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px var(--primary-light);
+    border-color: var(--primary);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.08);
 }
 
-.form-input:hover {
-    border-color: var(--primary-color);
+.form-input:hover, .form-select:hover, .form-textarea:hover {
+    border-color: var(--gray-300);
 }
 
-.input-currency {
-    position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 1.125rem;
+.form-input:focus ~ .input-icon,
+.form-select:focus ~ .input-icon,
+.form-textarea:focus ~ .input-icon {
+    color: var(--primary);
+}
+
+.amount-input {
     font-weight: 700;
-    color: var(--primary-color);
+    font-size: 20px;
+    padding-right: 70px;
+    letter-spacing: -0.3px;
 }
 
-.form-help {
-    display: block;
-    margin-top: 0.5rem;
-    font-size: 0.85rem;
-    color: var(--text-secondary);
+.input-suffix {
+    position: absolute;
+    right: 18px;
+    color: var(--primary);
+    font-weight: 800;
+    font-size: 18px;
+    pointer-events: none;
 }
 
-/* ===================================
-   Flèche de Transfert
-   =================================== */
-.transfer-arrow {
+.form-hint {
     display: flex;
-    justify-content: center;
-    margin: 1rem 0;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--gray-700);
+    line-height: 1.4;
 }
 
-.transfer-arrow svg {
-    color: var(--primary-color);
-    animation: bounce 2s infinite;
-}
-
-@keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-}
-
-/* ===================================
-   Boutons d'Action
-   =================================== */
-.form-actions {
+/* ============= TRANSFER INDICATOR (HORIZONTAL) ============= */
+.transfer-indicator.horizontal {
     display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-}
-
-.btn {
-    flex: 1;
-    display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    padding: 0.875rem 1.5rem;
+    align-self: center;
+    margin-top: 28px;
+}
+
+.transfer-icon {
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(0, 102, 255, 0.35);
+    animation: pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.icon-transfer {
+    width: 26px;
+    height: 26px;
+    color: white;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 6px 20px rgba(0, 102, 255, 0.35);
+    }
+    50% {
+        transform: scale(1.08);
+        box-shadow: 0 10px 28px rgba(0, 102, 255, 0.5);
+    }
+}
+
+/* ============= TRANSFER SUMMARY ============= */
+.transfer-summary {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    padding: 28px 32px;
+    border-radius: var(--radius-lg);
+    margin: 36px 0;
+    border: 2px solid #bae6fd;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+.summary-icon {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 6px 16px rgba(0, 102, 255, 0.3);
+}
+
+.summary-icon i {
+    width: 32px;
+    height: 32px;
+    color: white;
+}
+
+.summary-details {
+    flex: 1;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+}
+
+.summary-row.motif-row {
+    align-items: flex-start;
+}
+
+.summary-divider {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #93c5fd, transparent);
+    margin: 10px 0;
+}
+
+.summary-label {
+    font-size: 15px;
+    color: var(--gray-700);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.summary-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: -0.5px;
+}
+
+.summary-motif {
+    font-size: 14px;
+    color: var(--gray-700);
+    font-weight: 500;
+    font-style: italic;
+    text-align: right;
+    max-width: 500px;
+    line-height: 1.6;
+}
+
+.summary-motif.empty {
+    color: var(--gray-400);
+}
+
+/* ============= FORM ACTIONS ============= */
+.form-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 40px;
+    justify-content: flex-end;
+}
+
+.btn-submit {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: white;
+    padding: 16px 36px;
     border: none;
     border-radius: var(--radius-md);
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 15px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     transition: var(--transition);
-    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 4px 16px rgba(0, 102, 255, 0.3);
+    letter-spacing: -0.2px;
 }
 
-.btn-primary {
-    background: var(--primary-color);
-    color: white;
-    box-shadow: var(--shadow-md);
+.btn-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 102, 255, 0.4);
 }
 
-.btn-primary:hover {
-    background: var(--primary-hover);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
+.btn-submit:active {
+    transform: translateY(-1px);
 }
 
-.btn-primary:active {
-    transform: translateY(0);
-}
-
-.btn-secondary {
+.btn-cancel {
+    padding: 16px 28px;
     background: white;
-    color: var(--text-secondary);
-    border: 2px solid var(--border-color);
+    color: var(--gray-700);
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+    font-family: 'Inter', sans-serif;
 }
 
-.btn-secondary:hover {
-    background: var(--bg-body);
-    border-color: var(--secondary-color);
-    color: var(--text-primary);
+.btn-cancel:hover {
+    background: var(--gray-50);
+    border-color: var(--gray-300);
 }
 
-/* ===================================
-   Responsive Design
-   =================================== */
-@media (max-width: 640px) {
-    .transfer-container {
-        padding: 1rem;
-    }
+/* ============= ICONS ============= */
+.icon-xs {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+}
 
-    .transfer-card {
-        border-radius: var(--radius-md);
-    }
+.icon-title {
+    width: 32px;
+    height: 32px;
+    stroke-width: 2.5;
+}
 
-    .card-header {
-        padding: 1.5rem;
-    }
+[data-lucide] {
+    stroke-width: 2;
+}
 
-    .card-title {
-        font-size: 1.5rem;
+/* ============= RESPONSIVE ============= */
+@media (max-width: 1024px) {
+    .horizontal-form .accounts-section,
+    .horizontal-form .details-section {
+        grid-template-columns: 1fr;
+        gap: 28px;
     }
-
-    .transfer-form {
-        padding: 1.5rem;
+    
+    .transfer-indicator.horizontal {
+        margin-top: 0;
+        margin-bottom: 0;
+        transform: rotate(90deg);
     }
+    
+    .icon-transfer {
+        transform: rotate(-90deg);
+    }
+}
 
+@media (max-width: 768px) {
+    .form-wrapper {
+        padding: 0 16px;
+    }
+    
+    .form-container {
+        padding: 32px 24px;
+        border-radius: var(--radius-lg);
+    }
+    
+    .form-title {
+        font-size: 24px;
+        gap: 10px;
+    }
+    
     .form-actions {
         flex-direction: column-reverse;
+        gap: 12px;
     }
-
-    .btn {
+    
+    .btn-submit,
+    .btn-cancel {
         width: 100%;
+        justify-content: center;
+    }
+    
+    .transfer-summary {
+        flex-direction: column;
+        gap: 16px;
+        padding: 24px;
+    }
+    
+    .summary-icon {
+        margin: 0 auto;
+    }
+    
+    .summary-motif {
+        max-width: 100%;
+    }
+    
+    .summary-value {
+        font-size: 24px;
     }
 }
 
-/* ===================================
-   Mode Sombre (Optionnel)
-   =================================== */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg-card: #1e293b;
-        --bg-body: #0f172a;
-        --text-primary: #f1f5f9;
-        --text-secondary: #94a3b8;
-        --border-color: #334155;
+@media (max-width: 480px) {
+    .form-container {
+        padding: 24px 20px;
     }
-
-    .form-select,
-    .form-input {
-        background: #334155;
-        color: var(--text-primary);
+    
+    .amount-input {
+        font-size: 18px;
     }
-
-    .btn-secondary {
-        background: #334155;
-        border-color: #475569;
+    
+    .summary-value {
+        font-size: 20px;
     }
 }
 </style>
+
+<script>
+// Mise à jour dynamique du résumé
+document.addEventListener('DOMContentLoaded', function() {
+    const montantInput = document.getElementById('montant');
+    const motifInput = document.getElementById('motif');
+    const displayAmount = document.getElementById('display-amount');
+    const displayMotif = document.getElementById('display-motif');
+    
+    // Mise à jour du montant
+    if (montantInput) {
+        montantInput.addEventListener('input', function() {
+            const value = parseFloat(this.value) || 0;
+            const formatted = new Intl.NumberFormat('fr-MA', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(value);
+            
+            displayAmount.textContent = formatted + ' DH';
+        });
+    }
+    
+    // Mise à jour du motif en temps réel
+    if (motifInput) {
+        motifInput.addEventListener('input', function() {
+            const motifText = this.value.trim();
+            
+            if (motifText) {
+                displayMotif.textContent = motifText;
+                displayMotif.classList.remove('empty');
+            } else {
+                displayMotif.textContent = 'Aucun motif';
+                displayMotif.classList.add('empty');
+            }
+        });
+    }
+});
+</script>
 @endsection

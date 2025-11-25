@@ -9,17 +9,14 @@ class Client extends Model
 {
     use HasFactory;
 
-protected $fillable = [
-    'nom',
-    'prenom',
-    'cin',
-    'adresse',
-    'email',
-];
+    protected $fillable = [
+        'nom',
+        'prenom',
+        'cin',
+        'adresse',
+        'email'
+    ];
 
-
-
-    // Relation : 1 client → plusieurs comptes
     public function comptes()
     {
         return $this->hasMany(Compte::class);

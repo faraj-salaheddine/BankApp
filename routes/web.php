@@ -39,11 +39,20 @@ Route::get('/dashboard', function () {
 })->middleware('auth')->name('dashboard');
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-use App\Http\Controllers\AdminProfileController;
 
-// Groupe protégé par middleware 'auth' et 'admin'
-//Route::middleware(['auth', 'admin'])->group(function () {
+// CORRECTION ICI : Ajout de "\Auth" car ton fichier est dans le dossier Auth
+use App\Http\Controllers\Auth\AdminProfileController; 
+
+Route::middleware('auth')->group(function () {
+    
+    // Afficher la page de profil
     Route::get('/admin/profile', [AdminProfileController::class, 'edit'])->name('admin.profile.edit');
-    Route::put('/admin/profile', [AdminProfileController::class, 'update'])->name('admin.profile.update');
-    Route::put('/admin/password', [AdminProfileController::class, 'updatePassword'])->name('admin.password.update');
-  //});
+
+    // Mettre à jour les infos
+    Route::put('/admin/profile/update', [AdminProfileController::class, 'update'])->name('admin.profile.update');
+
+    // Mettre à jour le mot de passe
+    Route::put('/admin/profile/password', [AdminProfileController::class, 'updatePassword'])->name('admin.password.update');
+
+});
+Route::get('/comptes/{id}', [CompteController::class, 'show'])->name('comptes.show');

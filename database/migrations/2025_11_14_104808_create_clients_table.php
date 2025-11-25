@@ -9,11 +9,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('clients', function (Blueprint $table) {
-            $table->id();                           // id auto-incrémenté
-            $table->string('nom');                  // nom du client
-            $table->string('prenom');               // prénom du client
-            $table->string('email')->unique();      // email unique
-            $table->timestamps();                   // created_at + updated_at
+            $table->id();
+            $table->string('nom');
+            $table->string('prenom');
+            $table->string('cin')->unique();
+            $table->string('adresse')->nullable();
+            $table->string('email')->unique();
+            $table->timestamps();
         });
     }
 

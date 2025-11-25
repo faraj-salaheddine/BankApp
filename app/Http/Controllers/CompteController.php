@@ -66,4 +66,11 @@ class CompteController extends Controller
         Compte::destroy($id);
         return redirect()->route('comptes.index')->with('success', 'Compte supprimé !');
     }
+  public function show($id)
+{
+    $compte = Compte::with('client')->findOrFail($id);
+    return view('comptes.show', compact('compte'));
+}
+
+
 }

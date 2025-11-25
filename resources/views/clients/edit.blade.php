@@ -5,29 +5,43 @@
 @endsection
 
 @section('content')
-<h2 class="page-title">Modifier le client</h2>
+<div class="container-client">
 
-<div class="card-container form-card">
-    <form action="{{ route('clients.update', $client->id) }}" method="POST">
-        @csrf
-        @method('PUT')
+    <div class="client-card">
+        <h2 class="client-title">Modifier un client</h2>
 
-        <div class="form-group">
-            <label>Nom</label>
-            <input type="text" name="nom" class="form-input" value="{{ $client->nom }}" required>
-        </div>
+        <form action="{{ route('clients.update', $client->id) }}" method="POST" class="client-form">
+            @csrf
+            @method('PUT')
 
-        <div class="form-group">
-            <label>Prénom</label>
-            <input type="text" name="prenom" class="form-input" value="{{ $client->prenom }}" required>
-        </div>
+            <div class="form-group">
+                <label>Nom</label>
+                <input type="text" name="nom" value="{{ $client->nom }}" required>
+            </div>
 
-        <div class="form-group">
-            <label>Email</label>
-            <input type="email" name="email" class="form-input" value="{{ $client->email }}" required>
-        </div>
+            <div class="form-group">
+                <label>Prénom</label>
+                <input type="text" name="prenom" value="{{ $client->prenom }}" required>
+            </div>
 
-        <button type="submit" class="btn-main mt-3">Mettre à jour</button>
-    </form>
+            <div class="form-group">
+                <label>CIN</label>
+                <input type="text" name="cin" value="{{ $client->cin }}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" value="{{ $client->email }}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Adresse</label>
+                <input type="text" name="adresse" value="{{ $client->adresse }}" required>
+            </div>
+
+            <button type="submit" class="btn-save">Mettre à jour</button>
+        </form>
+    </div>
+
 </div>
 @endsection
