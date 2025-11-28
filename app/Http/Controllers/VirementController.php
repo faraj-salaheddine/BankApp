@@ -25,7 +25,8 @@ class VirementController extends Controller
         $request->validate([
             'compte_source' => 'required|different:compte_destination',
             'compte_destination' => 'required',
-            'montant' => 'required|numeric|min:1'
+            'montant' => 'required|numeric|min:1',
+            'motif' => 'nullable|string|max:255'
         ]);
 
         $source = Compte::find($request->compte_source);
@@ -48,7 +49,8 @@ class VirementController extends Controller
         Virement::create([
             'compte_source' => $source->id,
             'compte_destination' => $destination->id,
-            'montant' => $request->montant
+            'montant' => $request->montant,
+            'motif' => $request->motif
         ]);
 
         return redirect()->route('virements.index')->with('success', 'Virement effectué !');

@@ -9,7 +9,8 @@ class Virement extends Model
     protected $fillable = [
         'compte_source',
         'compte_destination',
-        'montant'
+        'montant',
+        'motif'
     ];
 
     public function source() {
